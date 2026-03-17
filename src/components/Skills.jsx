@@ -6,7 +6,7 @@ import dockerImage from '../assets/images/docker.png';
 import firebaseImage from '../assets/images/firebase.png';
 import javaImage from '../assets/images/java.png';
 import vscodeImage from '../assets/images/vscode.png';
-import wordpressImage from '../assets/images/Wordpress.png';
+import wordpressImage from '../assets/images/wordpress.png';
 
 const categories = [
   {
