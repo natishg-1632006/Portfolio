@@ -29,7 +29,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <p className="text-[#8c7665] text-sm">&#169; 2026 Natish. All Rights Reserved.</p>
+        <p className="text-[#8c7665] text-sm">&#169; 2024 Natish. All Rights Reserved.</p>
       </div>
     </footer>
   );
