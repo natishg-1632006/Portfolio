@@ -11,7 +11,7 @@ import wordpressImage from '../assets/images/wordpress.png';
 const categories = [
   {
     title: 'Programming Languages',
-    accent: 'from-[#EFF6FF] via-[#F8FBFF] to-[#FFFFFF]',
+    accent: 'from-[#fff8f1] via-[#fff3e8] to-[#fffaf2]',
     label: 'Core Logic',
     badge: 'C / Java / JS',
     skills: [
@@ -22,7 +22,7 @@ const categories = [
   },
   {
     title: 'Frontend',
-    accent: 'from-[#EFF6FF] via-[#F8FBFF] to-[#FFFFFF]',
+    accent: 'from-[#fff8f1] via-[#fff3e8] to-[#fffaf2]',
     label: 'Interface Craft',
     badge: 'UI',
     skills: [
@@ -35,7 +35,7 @@ const categories = [
   },
   {
     title: 'Backend',
-    accent: 'from-[#F0F9FF] via-[#F8FBFF] to-[#FFFFFF]',
+    accent: 'from-[#f6ede2] via-[#fff3e8] to-[#fffaf2]',
     label: 'Logic & APIs',
     badge: 'API',
     skills: [
@@ -45,7 +45,7 @@ const categories = [
   },
   {
     title: 'Database',
-    accent: 'from-[#EFF6FF] via-[#F8FBFF] to-[#FFFFFF]',
+    accent: 'from-[#fff8f1] via-[#fff3e8] to-[#fffaf2]',
     label: 'Data Layer',
     badge: 'DB',
     skills: [
@@ -55,7 +55,7 @@ const categories = [
   },
   {
     title: 'Tools',
-    accent: 'from-[#F0F9FF] via-[#F8FBFF] to-[#FFFFFF]',
+    accent: 'from-[#f6ede2] via-[#fff3e8] to-[#fffaf2]',
     label: 'Workflow Stack',
     badge: 'DEV',
     skills: [
@@ -133,7 +133,7 @@ export default function Skills() {
               key={title}
               variants={cardItem}
               whileHover={{ y: -10 }}
-              className={`relative rounded-[24px] border border-[#dfcfbd] bg-gradient-to-br ${accent.replace('EFF6FF','fff8f1').replace('F8FBFF','fff3e8').replace('FFFFFF','fffaf2').replace('F0F9FF','f6ede2')} p-5 md:p-6 shadow-[0_16px_38px_rgba(117,77,53,0.08)]`}
+              className={`relative rounded-[24px] border border-[#dfcfbd] bg-gradient-to-br ${accent} p-5 md:p-6 shadow-[0_16px_38px_rgba(117,77,53,0.08)]`}
             >
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div>
