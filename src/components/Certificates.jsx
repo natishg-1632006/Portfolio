@@ -205,7 +205,7 @@ export default function Certificates() {
   }, []);
 
   return (
-    <section id="certificates" className="py-20 bg-[#fffaf2]">
+    <section id="certificates" className="py-20 bg-[#fffaf2] overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6">
         <motion.div
           className="text-center mb-14"
@@ -229,7 +229,7 @@ export default function Certificates() {
         <div className="relative group">
           <button
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            className="absolute -left-3 md:-left-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100"
             aria-label="Scroll left"
           >
             <FaChevronLeft size={18} />
@@ -237,7 +237,7 @@ export default function Certificates() {
           
           <button
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            className="absolute -right-3 md:-right-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100"
             aria-label="Scroll right"
           >
             <FaChevronRight size={18} />

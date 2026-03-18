@@ -39,7 +39,7 @@ export default function Navbar() {
             style={{ fontFamily: 'Poppins, sans-serif' }}
             onClick={() => scrollTo('home')}
           >
-            Natish<span className="text-[#2c2118]">.</span>
+            Natish<span className="text-[#2c2118]"> G</span>
           </span>
         </div>
 
