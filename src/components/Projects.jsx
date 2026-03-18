@@ -111,10 +111,10 @@ export default function Projects() {
           <p className="text-[#7b6757] mt-4 text-sm">Selected work and case studies</p>
         </motion.div>
 
-        <div className="relative group">
+        <div className="relative group/slider">
           <button
             onClick={() => scroll('left')}
-            className="absolute -left-3 md:-left-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100"
+            className="absolute -left-3 md:-left-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover/slider:opacity-100"
             aria-label="Scroll left"
           >
             <FaChevronLeft size={18} />
@@ -122,20 +122,20 @@ export default function Projects() {
           
           <button
             onClick={() => scroll('right')}
-            className="absolute -right-3 md:-right-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100"
+            className="absolute -right-3 md:-right-6 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-100 md:opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover/slider:opacity-100"
             aria-label="Scroll right"
           >
             <FaChevronRight size={18} />
           </button>
 
-          <div className="overflow-hidden py-8">
+          <div className="-mx-4 px-4 overflow-hidden">
             <style>{`
               .hide-scroll::-webkit-scrollbar { display: none; }
             `}</style>
             <div
               ref={scrollContainerRef}
               onScroll={updateCenterIndex}
-              className="hide-scroll flex w-full gap-6 overflow-x-auto snap-x snap-mandatory px-0"
+              className="hide-scroll flex items-center w-full gap-6 overflow-x-auto snap-x snap-mandatory px-0 py-8"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {extendedProjects.map((p, index) => (
