@@ -19,21 +19,23 @@ export default function Contact() {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setStatus('sending');
-    try {
-      await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
-        { from_name: form.name, from_email: form.email, message: form.message },
-        'YOUR_PUBLIC_KEY'
-      );
-      setStatus('success');
-      setForm({ name: '', email: '', message: '' });
-    } catch {
-      setStatus('error');
-    }
+    emailjs.send(
+      'service_k7ionkf', // 👈 Replace with your EmailJS Service ID
+      'template_8bgbj8d',
+      { user_name: form.name, user_email: form.email, message: form.message },
+      'vox8a28dkiEumcq_o'
+    ).then(
+      () => {
+        setStatus('success');
+        setForm({ name: '', email: '', message: '' });
+      },
+      () => {
+        setStatus('error');
+      }
+    );
   };
 
   return (
