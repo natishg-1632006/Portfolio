@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaAward, FaTimes } from 'react-icons/fa';
+import { FaAward, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 import ibmCert from '../assets/images/IBM-cert.png';
 import microsoft1Cert from '../assets/images/Microsoft1-cert.png';
@@ -8,6 +8,18 @@ import microsoft2Cert from '../assets/images/Microsoft2-cert.png';
 import microsoft3Cert from '../assets/images/Microsoft3-cert.png';
 import microsoft4Cert from '../assets/images/Microsoft4-cert.png';
 import uiuxCert from '../assets/images/UIUX-cert.png';
+import ciscoCyberCert from '../assets/images/cisco-cyber-cert.png';
+import ciscoAiCert from '../assets/images/cisco-ai-cert.png';
+import ciscoNetCert from '../assets/images/cisco-cn-cert.png';
+import ciscoOsCert from '../assets/images/cisco-os-cert.png';
+import ciscoJsCert from '../assets/images/cisco-js-cert.png';
+
+import jsBadge from '../assets/images/IBM-badge.png';
+import jsBadge1 from '../assets/images/IBM-badge1.png';
+import osBadge from '../assets/images/OS-badge.png';
+import aiBadge from '../assets/images/AI-badge.png';
+import cyberBadge from '../assets/images/cyber-badge.png';
+import netBadge from '../assets/images/CN-badge.png';
 
 function toPoints(text) {
   return text
@@ -79,24 +91,118 @@ const certificates = [
     platform:
       'LetsUpgrade, in collaboration with National Skill Development Corporation and Google Developer Groups Madurai',
   },
+  {
+    title: 'Introduction to Cybersecurity',
+    issuer: 'Cisco Networking Academy',
+    image: ciscoCyberCert,
+    summary:
+      'Learned cybersecurity basics including threats, vulnerabilities, encryption, and security best practices.',
+    details:
+      'I successfully completed the Introduction to Cybersecurity course offered through Cisco Networking Academy. This course provided a foundational understanding of cybersecurity concepts, threats, and best practices used to protect digital systems and data. I learned about common cyber threats, network vulnerabilities, data protection techniques, and security policies. The course also introduced concepts like ethical hacking, encryption, and risk management, helping me understand how organizations secure their systems against attacks. This certification strengthened my knowledge of cybersecurity fundamentals and secure system design, which is essential for building safe and reliable applications.',
+    platform: 'Cisco Networking Academy',
+  },
+  {
+    title: 'AI Fundamentals',
+    issuer: 'IBM',
+    image: ciscoAiCert,
+    summary:
+      'Learned core AI concepts, machine learning basics, and real-world AI applications.',
+    details:
+      'I completed the AI Fundamentals with IBM SkillsBuild course, which introduced me to the core concepts of Artificial Intelligence and Machine Learning. This program covered topics such as AI applications, machine learning basics, data-driven decision-making, and real-world AI use cases. I gained insights into how AI systems are designed and how they are used across industries to automate processes and improve efficiency. This certification enhanced my understanding of AI concepts and intelligent systems, supporting my ability to work with modern AI-driven applications.',
+    platform: 'IBM SkillsBuild via Cisco Networking Academy',
+  },
+  {
+    title: 'Networking Basics',
+    issuer: 'Cisco Networking Academy',
+    image: ciscoNetCert,
+    summary:
+      'Learned core networking concepts including IP addressing, protocols, and network devices.',
+    details:
+      'I successfully completed the Networking Basics course, where I learned the fundamental concepts of computer networks and communication systems. The course covered network types, IP addressing, protocols, routers, switches, and data transmission concepts. I also gained an understanding of how devices communicate over networks and how modern internet infrastructure works. This certification strengthened my foundation in networking concepts, which is essential for backend development and cloud-based systems.',
+    platform: 'Cisco Networking Academy',
+  },
+  {
+    title: 'Operating Systems Basics',
+    issuer: 'Cisco Networking Academy',
+    image: ciscoOsCert,
+    summary:
+      'Learned OS fundamentals including memory, processes, and system operations.',
+    details:
+      'I completed the Operating Systems Basics course, which provided a strong understanding of how operating systems function and manage computer resources. I learned about process management, memory management, file systems, and system operations. The course also introduced how operating systems interact with hardware and software to ensure efficient system performance. This certification improved my understanding of system-level operations, which is important for software development and performance optimization.',
+    platform: 'Cisco Networking Academy',
+  },
+  {
+    title: 'JavaScript Essentials 1',
+    issuer: 'Cisco / OpenEDG',
+    image: ciscoJsCert,
+    summary:
+      'Learned JavaScript fundamentals including variables, functions, loops, and DOM basics.',
+    details:
+      'I successfully completed the JavaScript Essentials 1 course, which focuses on the fundamentals of JavaScript programming and web development. Through this course, I learned variables, data types, functions, loops, conditionals, and basic DOM manipulation. I also gained hands-on experience in writing JavaScript code to build interactive web applications. This certification strengthened my ability to develop dynamic and responsive web interfaces, which is essential for modern frontend and full-stack development.',
+    platform: 'Cisco Networking Academy & OpenEDG JavaScript Institute',
+  },
 ];
+
+const badges = [jsBadge,jsBadge1, osBadge, cyberBadge, netBadge, aiBadge];
+const scrollingBadges = [...badges, ...badges, ...badges, ...badges, ...badges, ...badges, ...badges, ...badges];
 
 export default function Certificates() {
   const [activeCertificate, setActiveCertificate] = useState(null);
-  const scrollingCertificates = [...certificates, ...certificates];
+  const [activeBadge, setActiveBadge] = useState(null);
+  const scrollContainerRef = useRef(null);
+  const [centerIndex, setCenterIndex] = useState(1);
+
+  const extendedCertificates = Array(40).fill(certificates).flat();
+
+  const updateCenterIndex = () => {
+    if (!scrollContainerRef.current || scrollContainerRef.current.children.length === 0) return;
+    const container = scrollContainerRef.current;
+    const itemOffsetWidth = container.children[0].offsetWidth;
+    const itemWidth = itemOffsetWidth + 24; // 24px is gap-6
+    const scrollCenter = container.scrollLeft + container.clientWidth / 2;
+    setCenterIndex(Math.round((scrollCenter - itemOffsetWidth / 2) / itemWidth));
+  };
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+      const container = scrollContainerRef.current;
+      const itemWidth = container.children[0].offsetWidth + 24;
+      container.scrollBy({ left: direction === 'left' ? -itemWidth : itemWidth, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
-    if (!activeCertificate) return undefined;
+    if (!activeCertificate && !activeBadge) return undefined;
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         setActiveCertificate(null);
+        setActiveBadge(null);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeCertificate]);
+  }, [activeCertificate, activeBadge]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+      const container = scrollContainerRef.current;
+      const itemOffsetWidth = container.children[0].offsetWidth;
+      const itemWidth = itemOffsetWidth + 24;
+      
+      const middleIndex = 20 * certificates.length; 
+      container.scrollLeft = middleIndex * itemWidth + itemOffsetWidth / 2 - container.clientWidth / 2;
+      updateCenterIndex();
+    }
+
+    const timeout = setTimeout(() => updateCenterIndex(), 100);
+    window.addEventListener('resize', updateCenterIndex);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('resize', updateCenterIndex);
+    };
+  }, []);
 
   return (
     <section id="certificates" className="py-20 bg-[#fffaf2]">
@@ -120,65 +226,117 @@ export default function Certificates() {
           </p>
         </motion.div>
 
-        <div className="overflow-hidden py-4">
-          <motion.div
-            className="flex w-max gap-8"
-            initial={{ x: 0 }}
-            animate={{ x: '-50%' }}
-            transition={{ duration: 42, ease: 'linear', repeat: Infinity }}
+        <div className="relative group">
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            aria-label="Scroll left"
           >
-            {scrollingCertificates.map((certificate, index) => (
-              <motion.button
-                key={`${certificate.title}-${index}`}
-                type="button"
-                onClick={() => setActiveCertificate(certificate)}
-                className="flex h-[510px] w-[290px] shrink-0 flex-col text-left bg-[#f8eee5] border border-[#dfcfbd] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(44,33,24,0.06)] hover:shadow-[0_16px_40px_rgba(117,77,53,0.14)] transition-all duration-300 sm:w-[320px]"
-                whileHover={{ y: -8 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="relative h-56 shrink-0 overflow-hidden bg-[#ead9c8]">
-                  <motion.div
-                    className="flex h-full w-full items-start justify-center overflow-hidden"
-                    whileHover={{ y: -2 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.img
-                      src={certificate.image}
-                      alt={certificate.title}
-                      className="h-full w-full object-contain object-top"
-                      whileHover={{ scale: 1.04 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.div>
-                </div>
+            <FaChevronLeft size={18} />
+          </button>
+          
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            aria-label="Scroll right"
+          >
+            <FaChevronRight size={18} />
+          </button>
 
-                <div className="flex min-h-0 flex-1 flex-col p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-full bg-[#f2dfcf] flex items-center justify-center">
-                      <FaAward className="text-[#c96f3a]" />
-                    </div>
-                    <div>
-                      <h3
-                        className="text-base font-semibold text-[#2c2118]"
-                        style={{ fontFamily: 'Poppins, sans-serif' }}
-                      >
-                        {certificate.title}
-                      </h3>
-                      <p className="text-sm text-[#7b6757]">{certificate.issuer}</p>
-                    </div>
+          <div className="overflow-hidden py-8">
+            <style>{`
+              .hide-scroll::-webkit-scrollbar { display: none; }
+            `}</style>
+            <div
+              ref={scrollContainerRef}
+              onScroll={updateCenterIndex}
+              className="hide-scroll flex w-full gap-6 overflow-x-auto snap-x snap-mandatory px-0"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {extendedCertificates.map((certificate, index) => (
+                <motion.button
+                  key={`${certificate.title}-${index}`}
+                  type="button"
+                  onClick={() => setActiveCertificate(certificate)}
+                  animate={{
+                    scale: index === centerIndex ? 1.05 : 0.95,
+                  }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="flex h-[480px] w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] shrink-0 snap-center flex-col text-left bg-[#f8eee5] border border-[#dfcfbd] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(44,33,24,0.06)] hover:shadow-[0_16px_40px_rgba(117,77,53,0.14)]"
+                  whileHover={{ y: -8 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="relative h-56 shrink-0 overflow-hidden bg-[#ead9c8]">
+                    <motion.div
+                      className="flex h-full w-full items-start justify-center overflow-hidden"
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.img
+                        src={certificate.image}
+                        alt={certificate.title}
+                        className="h-full w-full object-contain object-top"
+                        whileHover={{ scale: 1.04 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </motion.div>
                   </div>
 
-                  <p className="line-clamp-5 min-h-[110px] text-sm text-[#6d5a4c] leading-relaxed mb-4">
-                    {certificate.summary}
-                  </p>
-                  <span className="mt-auto inline-flex items-center text-sm font-semibold text-[#c96f3a]">
-                    View details
-                  </span>
-                </div>
-              </motion.button>
-            ))}
-          </motion.div>
+                  <div className="flex min-h-0 flex-1 flex-col p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-11 h-11 rounded-full bg-[#f2dfcf] flex items-center justify-center">
+                        <FaAward className="text-[#c96f3a]" />
+                      </div>
+                      <div>
+                        <h3
+                          className="text-base font-semibold text-[#2c2118]"
+                          style={{ fontFamily: 'Poppins, sans-serif' }}
+                        >
+                          {certificate.title}
+                        </h3>
+                        <p className="text-sm text-[#7b6757]">{certificate.issuer}</p>
+                      </div>
+                    </div>
+
+                    <p className="line-clamp-5 min-h-[110px] text-sm text-[#6d5a4c] leading-relaxed mb-4">
+                      {certificate.summary}
+                    </p>
+                    <span className="mt-auto inline-flex items-center text-sm font-semibold text-[#c96f3a]">
+                      View details
+                    </span>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </div>
         </div>
+
+        {/* Badges Auto-Scroll Marquee */}
+        <div className="mt-20">
+          <h3 className="text-xl md:text-2xl font-bold text-[#2c2118] text-center mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Skill Badges
+          </h3>
+          <div className="overflow-hidden py-6 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+            <motion.div
+              className="flex w-max gap-8 md:gap-12 pr-8 md:pr-12"
+              initial={{ x: 0 }}
+              animate={{ x: '-50%' }}
+              transition={{ duration: 60, ease: 'linear', repeat: Infinity }}
+            >
+              {scrollingBadges.map((badge, index) => (
+                <button
+                  key={`badge-${index}`}
+                  type="button"
+                  onClick={() => setActiveBadge(badge)}
+                  className="w-24 h-24 md:w-28 md:h-28 shrink-0 flex items-center justify-center bg-white rounded-3xl border border-[#dfcfbd] shadow-[0_8px_20px_rgba(117,77,53,0.06)] p-4 transition-all hover:-translate-y-2 hover:shadow-[0_16px_32px_rgba(117,77,53,0.12)] cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#c96f3a]"
+                >
+                  <img src={badge} alt="Skill Badge" className="max-w-full max-h-full object-contain drop-shadow-sm" />
+                </button>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+
       </div>
 
       <AnimatePresence>
@@ -262,6 +420,37 @@ export default function Certificates() {
                   </div>
                 </div>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {activeBadge && (
+          <motion.div
+            className="fixed inset-0 z-[70] bg-[#2c2118]/65 px-4 py-8 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveBadge(null)}
+          >
+            <motion.div
+              className="relative w-full max-w-sm bg-[#fffaf2] rounded-[32px] p-10 shadow-[0_24px_80px_rgba(44,33,24,0.28)] flex flex-col items-center justify-center"
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 24 }}
+              transition={{ duration: 0.25 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveBadge(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 text-[#2c2118] hover:bg-[#f5e8da] transition-colors flex items-center justify-center shadow-sm"
+                aria-label="Close badge details"
+              >
+                <FaTimes />
+              </button>
+              <img src={activeBadge} alt="Skill Badge" className="w-full h-auto object-contain drop-shadow-md" />
             </motion.div>
           </motion.div>
         )}

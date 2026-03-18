@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaGithub, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import ProjectCard from './ProjectCard';
 
 const projects = [
@@ -40,7 +40,27 @@ const projects = [
 
 export default function Projects() {
   const [activeProject, setActiveProject] = useState(null);
-  const scrollingProjects = [...projects, ...projects];
+  const scrollContainerRef = useRef(null);
+  const [centerIndex, setCenterIndex] = useState(1);
+
+  const extendedProjects = Array(40).fill(projects).flat();
+
+  const updateCenterIndex = () => {
+    if (!scrollContainerRef.current || scrollContainerRef.current.children.length === 0) return;
+    const container = scrollContainerRef.current;
+    const itemOffsetWidth = container.children[0].offsetWidth;
+    const itemWidth = itemOffsetWidth + 24; // 24px is gap-6
+    const scrollCenter = container.scrollLeft + container.clientWidth / 2;
+    setCenterIndex(Math.round((scrollCenter - itemOffsetWidth / 2) / itemWidth));
+  };
+
+  const scroll = (direction) => {
+    if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+      const container = scrollContainerRef.current;
+      const itemWidth = container.children[0].offsetWidth + 24;
+      container.scrollBy({ left: direction === 'left' ? -itemWidth : itemWidth, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     if (!activeProject) return undefined;
@@ -54,6 +74,25 @@ export default function Projects() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeProject]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+      const container = scrollContainerRef.current;
+      const itemOffsetWidth = container.children[0].offsetWidth;
+      const itemWidth = itemOffsetWidth + 24;
+      
+      const middleIndex = 20 * projects.length; 
+      container.scrollLeft = middleIndex * itemWidth + itemOffsetWidth / 2 - container.clientWidth / 2;
+      updateCenterIndex();
+    }
+
+    const timeout = setTimeout(() => updateCenterIndex(), 100);
+    window.addEventListener('resize', updateCenterIndex);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('resize', updateCenterIndex);
+    };
+  }, []);
 
   return (
     <section id="projects" className="py-20 bg-[#f3e8db]">
@@ -72,19 +111,47 @@ export default function Projects() {
           <p className="text-[#7b6757] mt-4 text-sm">Selected work and case studies</p>
         </motion.div>
 
-        <div className="overflow-hidden py-4">
-          <motion.div
-            className="flex w-max gap-8"
-            initial={{ x: 0 }}
-            animate={{ x: '-50%' }}
-            transition={{ duration: 36, ease: 'linear', repeat: Infinity }}
+        <div className="relative group">
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            aria-label="Scroll left"
           >
-            {scrollingProjects.map((p, index) => (
-              <div key={`${p.title}-${index}`} className="h-[420px] w-[300px] shrink-0 sm:h-[430px] sm:w-[340px]">
-                <ProjectCard {...p} onOpen={() => setActiveProject(p)} />
-              </div>
-            ))}
-          </motion.div>
+            <FaChevronLeft size={18} />
+          </button>
+          
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#fffaf2]/90 border border-[#dfcfbd] text-[#c96f3a] opacity-0 shadow-[0_8px_20px_rgba(117,77,53,0.15)] backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-[#f2dfcf] group-hover:opacity-100 hidden md:flex"
+            aria-label="Scroll right"
+          >
+            <FaChevronRight size={18} />
+          </button>
+
+          <div className="overflow-hidden py-8">
+            <style>{`
+              .hide-scroll::-webkit-scrollbar { display: none; }
+            `}</style>
+            <div
+              ref={scrollContainerRef}
+              onScroll={updateCenterIndex}
+              className="hide-scroll flex w-full gap-6 overflow-x-auto snap-x snap-mandatory px-0"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {extendedProjects.map((p, index) => (
+                <motion.div
+                  key={`${p.title}-${index}`}
+                  animate={{
+                    scale: index === centerIndex ? 1.05 : 0.95,
+                  }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="snap-center shrink-0 w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] h-[420px] sm:h-[430px]"
+                >
+                  <ProjectCard {...p} onOpen={() => setActiveProject(p)} />
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
 
       </div>
